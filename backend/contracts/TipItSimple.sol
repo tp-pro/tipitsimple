@@ -57,6 +57,13 @@ contract TipItSimple {
     }
 
     /**
+     * @dev function pour récupérer l'adresse du propriétaire
+     */
+    function getOwner() public view returns (address) {
+        return owner;
+    }
+
+    /**
      * @dev function pour récupérer l'ensemble des messages reçus et stockés depuis la blockchain
      */
     function getTips() public view returns (Tip[] memory) {
