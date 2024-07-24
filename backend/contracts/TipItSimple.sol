@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.26;
+
+// Uncomment this line to use console.log
+// import "hardhat/console.sol";
+
+contract TipItSimple {
+    //évènement pour envoyer un remerciement
+    event NewTip(
+        address indexed from,
+        uint256 timestamp,
+        string name,
+        string message
+    );
+
+    //struct d'un remerciement
+    struct Tip {
+        address from;
+        uint256 timestamp;
+        string name;
+        string message;
+    }
+
+    //liste des remerciements
+    Tip[] tips;
+
+    //address de déploiement du contrat
+    address payable owner;
+
+    //constructor pour la logique de déploiement
+    //peut reçevoir des paiements
+    constructor() {
+        owner = payable(msg.sender);
+    }
+
+    /**
+     * @dev function tip pour le propriétaire du contrat
+     * @param _name
+     * @param _message
+     */
+    function tip(string memory _name, string memory _message) public payable {
+        require(msg.value > 0, "can't tip with 0 eth");
+
+        //ajout du tip au storage
+        tips.push(Tip(
+            msg.sendern
+            block.timestamp,
+            _name,
+            _message
+        ));
+
+        //emit un log event lorsqu'un nouveau tip est créé
+        emit NewTip(
+            msg.sender,
+            block.timestamp,
+            _name,
+            _message
+        );
+    }
+
+    /**
+     * @dev function de retrait pour récupération des fonds par le propriétaire du contrat
+     * @param _name
+     * @param _message
+     */
+    function withdrawTips() public {
+        // address(this).balance
+        require(owner.send(address(this).balance));
+    }
+
+    /**
+     * @dev function pour récupérer l'ensemble des messages reçus et stockés depuis la blockchain
+     * @param _name
+     * @param _message
+     */
+    function getTips() public view returns(Tip[] memory) {
+        return tips;
+    }
+}
