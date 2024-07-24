@@ -19,10 +19,10 @@ export default function Home() {
         setMessage(event.target.value);
     }
 
-    const buyCoffee = async () => {
+    const tipThank = async () => {
         try {
             await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const provider = new ethers.BrowserProvider(window.ethereum);
+            const provider = new ethers.BrowserProvider(window.ethereum, "any");
               
             const signer = provider.getSigner();
             const tipItSimple = new ethers.Contract(
@@ -31,15 +31,15 @@ export default function Home() {
                 signer
             );
 
-            console.log('buying coffee..');
-            const coffeeTxn = await tipItSimple.buyCoffee(
+            console.log('tip..');
+            const tipTransaction = await tipItSimple.tipThank(
                 name ? name : 'anon',
                 message ? message : 'Enjoy your coffee!',
                 { value: ethers.utils.parseEther('0.001') }
             );
 
-            await coffeeTxn.wait();
-            console.log('mined', coffeeTxn.hash);
+            await tipTransaction.wait();
+            console.log('mined', tipTransaction.hash);
             console.log('coffee purchased!');
 
             setName('');
@@ -51,14 +51,8 @@ export default function Home() {
 
     const getTips = async () => {
         try {
-            const { ethereum } = window;
-            if (!ethereum) {
-                console.log('Metamask is not connected');
-                return;
-            }
-
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
             const provider = new ethers.BrowserProvider(window.ethereum);
-              
 
             const signer = provider.getSigner();
             const tipItSimple = new ethers.Contract(
@@ -70,31 +64,14 @@ export default function Home() {
             console.log('fetching tips from the blockchain..');
             const tipsFromBlockchain = await tipItSimple.getTips();
             console.log('fetched!');
-            setTips(tipsFromBlockchain.map(tip => ({
-                address: tip.from,
-                timestamp: new Date(tip.timestamp * 1000),
-                name: tip.name,
-                message: tip.message
-            })));
+            setTips(tips);
         } catch (error) {
             console.log(error);
         }
     };
 
     useEffect(() => {
-        const options = { method: 'GET', headers: { accept: 'application/json' } };
-        const apiKey = 'UhoaaYxCWnnFTDH3kfofjnO0KIddISux'; // Remplacez par votre clé API
-        const url = `https://polygon-amoy.g.alchemy.com/nft/v3/${apiKey}/getNFTMetadata?contractAddress=0x8fFBF17AC46f37ed9ddD90442E811AC2857fC3b8&tokenId=0&refreshCache=false`;
-        
-        fetch(url, options)
-        .then(response => response.json())
-        .then(response => {
-            if (response.image && response.image.originalUrl) {
-                setImgURL(response.image.originalUrl);
-            }
-        })
-        .catch(err => console.error(err));
-        
+        let tipItSimple;
         getTips();
 
         const onNewTip = (from, timestamp, name, message) => {
@@ -105,29 +82,23 @@ export default function Home() {
             ]);
         };
 
-        const { ethereum } = window;
-
         if (typeof window !== 'undefined' && window.ethereum) {
             // const provider = new ethers.Web3Provider(window.ethereum);
-            const provider = new ethers.BrowserProvider(window.ethereum);
+            const provider = new ethers.BrowserProvider(window.ethereum, "any");
             const signer = provider.getSigner();
-            const tipItSimple = new ethers.Contract(
+            tipItSimple = new ethers.Contract(
                 ContractAddress,
                 ContractABI,
                 signer
             );
     
-            const onNewTip = (from, timestamp, name, message) => {
-                console.log('Tip received:', from, timestamp, name, message);
-                setTips(prevTips => [
-                    ...prevTips,
-                    { address: from, timestamp: new Date(timestamp * 1000), name, message }
-                ]);
-            };
-    
             tipItSimple.on('NewTip', onNewTip);
+        }
             
-            return () => tipItSimple.off('NewTip', onNewTip);
+        return () => {
+            if (tipItSimple) {
+              tipItSimple.off("NewTip", onNewTip);
+            }
         }
     }, []);
 
@@ -137,7 +108,7 @@ export default function Home() {
             <p>Account: {currentAccount || 'Not connected'}</p>
             <input value={name} onChange={onNameChange} placeholder="Your name" />
             <textarea value={message} onChange={onMessageChange} placeholder="Your message" />
-            <button onClick={buyCoffee}>Buy Coffee</button>
+            <button onClick={tipThank}>Buy Coffee</button>
             <div>
                 {tips.map((tip, index) => (
                     <div key={index}>
