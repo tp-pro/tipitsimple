@@ -22,7 +22,7 @@ import {
 
 const config = getDefaultConfig({
     appName: 'My RainbowKit App',
-    projectId: 'f93c281e65f355ab9ae5d54108a1b606',
+    projectId: process.env.NEXT_PUBLIC_RAINBOWKIT_PROJECT_ID,
     chains: [hardhat, mainnet, polygon, optimism, arbitrum, base],
     ssr: true, // If your dApp uses server side rendering (SSR)
 });
