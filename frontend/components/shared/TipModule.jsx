@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { contractAddress, contractABI } from "@/constants";
 
 import { Input } from "../ui/input";
@@ -10,6 +10,7 @@ import { Label } from "../ui/label";
 import { parseEther } from "viem";
 
 import Informations from "./Informations";
+import Tips from "./Tips";
 
 const TipModule = () => {
     const [tipName, setTipName] = useState('');
@@ -33,16 +34,6 @@ const TipModule = () => {
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
 
-    const { data: tipsData, isError: isTipsError, isLoading: isTipsLoading } = useReadContract({
-        addressOrName: contractAddress,
-        contractInterface: contractABI,
-        functionName: 'getTips',
-    });
-
-    useEffect(() => {
-        // Logique ou actions à effectuer après confirmation de la transaction ou récupération des données
-    }, [isConfirmed, tipsData]);
-
     return (
         <div>
             <Informations hash={hash} isConfirming={isConfirming} isConfirmed={isConfirmed} error={error} />
@@ -59,7 +50,7 @@ const TipModule = () => {
                 <Input type="text" id="tipPrice" placeholder="Ex: 0.001" onChange={(e) => setTipPrice(e.target.value)}></Input>
             </div>
             <Button variant="outline" disabled={isPending} onClick={handleTip}>{isPending ? 'Envoie en cours...' : 'Envoyer le pourboir' }</Button>
-            {isTipsLoading ? <div>Chargement des données...</div> : isTipsError ? <div>Erreur lors de la lecture des données.</div> : <div>Données: {tipsData}</div>}
+            <Tips />
         </div>
     )
 }

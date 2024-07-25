@@ -22,7 +22,7 @@ contract TipItSimple {
     }
 
     //liste des remerciements
-    Tip[] tips;
+    Tip[] public tips;
 
     //address de déploiement du contrat
     address payable immutable owner;
