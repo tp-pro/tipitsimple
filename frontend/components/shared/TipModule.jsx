@@ -4,6 +4,7 @@ import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagm
 import { contractAddress, contractABI } from "@/constants";
 
 import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 
@@ -43,7 +44,7 @@ const TipModule = () => {
             </div>
             <div>
                 <Label htmlFor="tipMessage">Message</Label>
-                <Input type="text" id="tipMessage" placeholder="Ex: Merci pour le coup de pouce" onChange={(e) => setTipMessage(e.target.value)}></Input>
+                <Textarea id="tipMessage" placeholder="Ex: Merci pour le coup de pouce" onChange={(e) => setTipMessage(e.target.value)} />
             </div>
             <div>
                 <Label htmlFor="tipPrice">Montant</Label>

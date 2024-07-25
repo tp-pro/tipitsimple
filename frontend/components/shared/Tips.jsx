@@ -2,6 +2,15 @@ import { useState, useEffect } from 'react';
 import { useReadContract } from 'wagmi';
 import { contractAddress, contractABI } from "@/constants";
 
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '../ui/card';
+
 const Tips = () => {
     const { data, isError, isLoading, error } = useReadContract({
         address: contractAddress,
@@ -46,9 +55,18 @@ const Tips = () => {
           <p>No tips available.</p>
         ) : (
           tips.map((tip, index) => (
-            <div key={index}>
-              <p>{tip.name}: {tip.message} - {tip.timestamp}</p>
-            </div>
+            <Card key={index} className="my-2">
+                <CardHeader>
+                    <CardTitle>{tip.name}</CardTitle>
+                    <CardDescription>{tip.from}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <p>{tip.message}</p>
+                </CardContent>
+                <CardFooter>
+                    <small className="text-sm font-medium leading-none">{tip.timestamp}</small>
+                </CardFooter>
+            </Card>
           ))
         )}
       </div>
