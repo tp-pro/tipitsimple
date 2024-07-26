@@ -6,16 +6,7 @@ import {
 
 const Informations = ({ hash, isConfirming, isConfirmed, error }) => {
   return (
-    <>
-        {hash && 
-          <Alert className="bg-lime-200 mt-5 mb-5">
-            
-            <AlertTitle>Information</AlertTitle>
-            <AlertDescription>
-              Hash de la transaction : {hash}
-            </AlertDescription>
-          </Alert>
-        } 
+    <div>
         {isConfirming && 
           <Alert className="bg-yellow-200 mt-5 mb-5">
             
@@ -41,7 +32,16 @@ const Informations = ({ hash, isConfirming, isConfirmed, error }) => {
             </AlertDescription>
           </Alert>
         )} 
-    </>
+        {hash && 
+          <Alert className="bg-lime-200 mt-5 mb-5">
+            
+            <AlertTitle>Information</AlertTitle>
+            <AlertDescription>
+              Hash de la transaction : {hash}
+            </AlertDescription>
+          </Alert>
+        } 
+    </div>
   )
 }
 

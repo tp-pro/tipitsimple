@@ -5,7 +5,7 @@ const Layout = ({ children }) => {
     return (
         <div>
             <Header />
-            <main className="h-screen flex items-center justify-center">
+            <main>
                 {children}
             </main>
             <Footer />

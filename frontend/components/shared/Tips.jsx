@@ -33,16 +33,25 @@ const Tips = () => {
             name: tip[2],
             message: tip[3]
           } : tip;
+
+          // Vérification du type et conversion
+          let timestamp = tipData.timestamp;
+          if (typeof timestamp === 'string' || typeof timestamp === 'number') {
+            timestamp = BigInt(timestamp);
+          }
           
           return {
             from: tipData.from,
             // Utilisez BigInt pour gérer les grands nombres
-            timestamp: new Date(Number(BigInt(tipData.timestamp))).toLocaleString(),
+            timestamp: Number(timestamp) * 1000,
             name: tipData.name,
             message: tipData.message
           };
         });
-        setTips(formattedTips);
+
+        const sortedTips = formattedTips.sort((a, b) => b.timestamp - a.timestamp);
+
+        setTips(sortedTips);
       }
     }, [data]);
   
@@ -64,7 +73,7 @@ const Tips = () => {
                     <p>{tip.message}</p>
                 </CardContent>
                 <CardFooter>
-                    <small className="text-sm font-medium leading-none">{tip.timestamp}</small>
+                    <small className="text-sm font-medium leading-none">{new Date(tip.timestamp).toLocaleString()}</small>
                 </CardFooter>
             </Card>
           ))
