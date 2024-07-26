@@ -6,7 +6,7 @@ import {
 
 const Informations = ({ hash, isConfirming, isConfirmed, error }) => {
   return (
-    <div>
+    <>
         {isConfirming && 
           <Alert className="bg-yellow-200 mt-5 mb-5">
             
@@ -41,7 +41,7 @@ const Informations = ({ hash, isConfirming, isConfirmed, error }) => {
             </AlertDescription>
           </Alert>
         } 
-    </div>
+    </>
   )
 }
 
