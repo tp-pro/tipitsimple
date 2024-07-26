@@ -20,6 +20,12 @@ const TipForm = () => {
 
     const { data: hash, isPending, error, writeContract } = useWriteContract();
 
+    const resetForm = () => {
+        setTipName('');
+        setTipMessage('');
+        setTipPrice('');
+    };
+
     const handleTip = async() => {
         writeContract({
             address: contractAddress,
@@ -33,19 +39,25 @@ const TipForm = () => {
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
 
+    useEffect(() => {
+        if (isConfirmed) {
+            resetForm();
+        }
+    }, [isConfirmed]);
+
     return (
         <div>
             <div className="mb-2">
                 <Label htmlFor="tipName">Nom</Label>
-                <Input type="text" id="tipName" placeholder="Ex: John Doe" onChange={(e) => setTipName(e.target.value)}></Input>
+                <Input type="text" id="tipName" placeholder="Ex: John Doe" value={tipName} onChange={(e) => setTipName(e.target.value)}></Input>
             </div>
             <div className="my-2">
                 <Label htmlFor="tipMessage">Message</Label>
-                <Textarea id="tipMessage" placeholder="Ex: Merci pour le coup de pouce" onChange={(e) => setTipMessage(e.target.value)} />
+                <Textarea id="tipMessage" placeholder="Ex: Merci pour le coup de pouce" value={tipMessage} onChange={(e) => setTipMessage(e.target.value)} />
             </div>
             <div className="my-2">
                 <Label htmlFor="tipPrice">Montant</Label>
-                <Input type="text" id="tipPrice" placeholder="Ex: 0.001" onChange={(e) => setTipPrice(e.target.value)}></Input>
+                <Input type="text" id="tipPrice" placeholder="Ex: 0.001" value={tipPrice} onChange={(e) => setTipPrice(e.target.value)}></Input>
             </div>
             <Button className="mt-2" variant="outline" disabled={isPending} onClick={handleTip}>{isPending ? 'Envoie en cours...' : 'Envoyer le pourboir' }</Button>
             <Informations className="mt-10" hash={hash} isConfirming={isConfirming} isConfirmed={isConfirmed} error={error} />
