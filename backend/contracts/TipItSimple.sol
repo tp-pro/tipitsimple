@@ -5,6 +5,12 @@ pragma solidity ^0.8.26;
 // import "hardhat/console.sol";
 
 contract TipItSimple {
+    //mapping pour stocker les amis de chaque utilisateur
+    mapping(address => address[]) private friends;
+
+    //mapping pour vérifier rapidement si une adresse est un ami
+    mapping(address => mapping(address => bool)) private isFriend;
+
     //évènement pour émettre un remerciement
     event NewTip(
         address indexed from,
@@ -99,10 +105,20 @@ contract TipItSimple {
     function tip(
         string memory _name,
         string memory _message,
-        address payable _to
+        uint256 _to,
+        bool _isIndex
     ) public payable {
         require(msg.value > 0, "can't tip with 0 eth");
-        require(_to != address(0), "Cannot send to zero address");
+
+        address payable recipient;
+        if (_isIndex) {
+            require(_to < friends[msg.sender].length, "Invalid friend index");
+            recipient = payable(friends[msg.sender][_to]);
+        } else {
+            recipient = payable(address(uint160(_to)));
+        }
+
+        require(recipient != address(0), "Cannot send to zero address");
 
         uint256 commission = (msg.value * commissionRate) / 100;
         uint256 amountToSend = msg.value - commission;
@@ -110,13 +126,20 @@ contract TipItSimple {
 
         //ajout du tip au storage
         tips.push(
-            Tip(msg.sender, _to, block.timestamp, _name, _message, msg.value)
+            Tip(
+                msg.sender,
+                recipient,
+                block.timestamp,
+                _name,
+                _message,
+                msg.value
+            )
         );
 
         //emit un log event lorsqu'un nouveau tip est créé
         emit NewTip(
             msg.sender,
-            _to,
+            recipient,
             block.timestamp,
             _name,
             _message,
@@ -124,7 +147,7 @@ contract TipItSimple {
         );
 
         // Transférer les ETH directement à l'adresse spécifiée
-        _to.transfer(amountToSend);
+        recipient.transfer(amountToSend);
     }
 
     /**
@@ -149,5 +172,45 @@ contract TipItSimple {
      */
     function getTips() public view returns (Tip[] memory) {
         return tips;
+    }
+
+    /**
+     * @dev Fonction pour ajouter un ami, restreinte au propriétaire du contrat
+     * @param _friend Adresse de l'ami à ajouter
+     */
+    function addFriend(address _friend) public onlyOwner {
+        require(_friend != msg.sender, "Cannot add yourself as a friend");
+        require(!isFriend[owner][_friend], "Already a friend");
+
+        friends[owner].push(_friend);
+        isFriend[owner][_friend] = true;
+    }
+
+    /**
+     * @dev Fonction pour supprimer un ami
+     * @param _friend Adresse de l'ami à supprimer
+     */
+    function removeFriend(address _friend) public {
+        require(isFriend[msg.sender][_friend], "Not a friend");
+
+        for (uint256 i = 0; i < friends[msg.sender].length; i++) {
+            if (friends[msg.sender][i] == _friend) {
+                friends[msg.sender][i] = friends[msg.sender][
+                    friends[msg.sender].length - 1
+                ];
+                friends[msg.sender].pop();
+                break;
+            }
+        }
+
+        isFriend[msg.sender][_friend] = false;
+    }
+
+    /**
+     * @dev Fonction pour récupérer la liste des amis d'un utilisateur
+     * @return Un tableau d'adresses représentant les amis de l'utilisateur
+     */
+    function getFriends() public view returns (address[] memory) {
+        return friends[msg.sender];
     }
 }
