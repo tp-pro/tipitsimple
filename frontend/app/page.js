@@ -5,6 +5,7 @@ import TipModule from '@/components/shared/TipModule';
 import NotConnected from '@/components/shared/NotConnected';
 import TipManager from '@/components/TipManager';
 import { useAccount } from "wagmi";
+import TipForm from '@/components/shared/TipForm';
 
 import {
     Card,
@@ -18,6 +19,7 @@ export default function Home() {
 
     const { isConnected } = useAccount();
     const [accounts, setAccounts] = useState([]);
+    const [selectedWallet, setSelectedWallet] = useState(null);
 
     const addAccount = (account) => {
         setAccounts([...accounts, account]);
@@ -39,10 +41,16 @@ export default function Home() {
                                 <p>{account.walletAddress}</p>
                             </CardContent>
                             <CardFooter>
-                                <button>Envoyer un tips</button>
+                                <button onClick={() => setSelectedWallet(account.walletAddress)}>Envoyer un pourboire</button>
                             </CardFooter>
                         </Card>
                     ))}
+                    {selectedWallet && (
+                        <>
+                            <p>Adresse du portefeuille sélectionné: {selectedWallet}</p>
+                            <TipForm selectedWallet={selectedWallet} />
+                        </>
+                    )}
                 </>
             ) : (
                 <NotConnected />

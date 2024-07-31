@@ -11,7 +11,7 @@ import { parseEther } from "viem";
 
 import Informations from "./Informations";
 
-const TipForm = () => {
+const TipForm = ({ selectedWallet }) => {
     const [tipName, setTipName] = useState('');
     const [tipMessage, setTipMessage] = useState('');
     const [tipPrice, setTipPrice] = useState('');
@@ -27,14 +27,18 @@ const TipForm = () => {
     };
 
     const handleTip = async() => {
-        writeContract({
-            address: contractAddress,
-            abi: contractABI,
-            functionName: 'tip',
-            args: [tipName, tipMessage],
-            value: parseEther(tipPrice),
-            account: address,
-        })
+        if (selectedWallet) { 
+            writeContract({
+                address: contractAddress,
+                abi: contractABI,
+                functionName: 'tip',
+                args: [tipName, tipMessage, selectedWallet],
+                value: parseEther(tipPrice),
+                overrides: {
+                    from: address
+                }
+            })
+        }
     }
 
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
@@ -47,6 +51,7 @@ const TipForm = () => {
 
     return (
         <div>
+            <p>Adresse Wallet : {selectedWallet}</p>
             <div className="mb-2">
                 <Label htmlFor="tipName">Nom</Label>
                 <Input type="text" id="tipName" placeholder="Ex: John Doe" value={tipName} onChange={(e) => setTipName(e.target.value)}></Input>

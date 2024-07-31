@@ -45,7 +45,8 @@ const Tips = () => {
             // Utilisez BigInt pour gérer les grands nombres
             timestamp: Number(timestamp) * 1000,
             name: tipData.name,
-            message: tipData.message
+            message: tipData.message,
+            selectedWallet: tipData.selectedWallet
           };
         });
 
@@ -71,6 +72,7 @@ const Tips = () => {
                 </CardHeader>
                 <CardContent>
                     <p>{tip.message}</p>
+                    <p>{tip.selectedWallet}</p>
                 </CardContent>
                 <CardFooter>
                     <small className="text-sm font-medium leading-none">{new Date(tip.timestamp).toLocaleString()}</small>
