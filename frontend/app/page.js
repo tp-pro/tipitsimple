@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ethers } from 'ethers';
 import TipModule from '@/components/shared/TipModule';
 import NotConnected from '@/components/shared/NotConnected';
 import TipManager from '@/components/TipManager';
-import { useAccount } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import TipForm from '@/components/shared/TipForm';
+import { contractAddress, contractABI } from "@/constants";
 
 import {
     Card,
@@ -17,22 +19,40 @@ import {
 
 export default function Home() {
 
-    const { isConnected } = useAccount();
+    const { isConnected, address } = useAccount();
     const [accounts, setAccounts] = useState([]);
     const [selectedWallet, setSelectedWallet] = useState(null);
+    const [isOwner, setIsOwner] = useState(false);
+
+    // Lire l'adresse du propriétaire du contrat
+    const { data: ownerAddress } = useReadContract({
+        address: contractAddress,
+        abi: contractABI,
+        functionName: 'getOwner',
+    });
+
+    useEffect(() => {
+        if (address && ownerAddress) {
+            setIsOwner(address.toLowerCase() === ownerAddress.toLowerCase());
+        }
+    }, [address, ownerAddress]);
 
     const addAccount = (account) => {
-        setAccounts([...accounts, account]);
+        setAccounts(prevAccounts => ({
+            ...prevAccounts,
+            [address]: [...(prevAccounts[address] || []), account]
+        }));
     };
    
+    const currentUserAccounts = accounts[address] || [];
 
     return (
         <div>
             { isConnected ? (
                 <>
                     <TipModule />
-                    <TipManager onAddAccount={addAccount} />
-                    {accounts.map((account, index) => (
+                    {isOwner && <TipManager onAddAccount={addAccount} />}
+                    {currentUserAccounts.map((account, index) => (
                         <Card key={index} className="my-2">
                             <CardHeader>
                                 <CardTitle>{account.name}</CardTitle>

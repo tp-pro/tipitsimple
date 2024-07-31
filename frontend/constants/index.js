@@ -1,4 +1,4 @@
-export const contractAddress="0x5FbDB2315678afecb367f032d93F642f64180aa3"
+export const contractAddress="0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 export const contractABI=[
     {
       "inputs": [],
@@ -93,6 +93,19 @@ export const contractABI=[
       "type": "event"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_friend",
+          "type": "address"
+        }
+      ],
+      "name": "addFriend",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "commissionRate",
       "outputs": [
@@ -100,6 +113,19 @@ export const contractABI=[
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getFriends",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
         }
       ],
       "stateMutability": "view",
@@ -166,6 +192,19 @@ export const contractABI=[
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "_friend",
+          "type": "address"
+        }
+      ],
+      "name": "removeFriend",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "uint256",
           "name": "_rate",
           "type": "uint256"
@@ -189,9 +228,14 @@ export const contractABI=[
           "type": "string"
         },
         {
-          "internalType": "address payable",
+          "internalType": "uint256",
           "name": "_to",
-          "type": "address"
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "_isIndex",
+          "type": "bool"
         }
       ],
       "name": "tip",

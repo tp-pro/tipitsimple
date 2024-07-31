@@ -26,21 +26,39 @@ const Tips = () => {
         // Vérifiez si data est un tableau
         const tipsArray = Array.isArray(data) ? data : [data];
         
-        const formattedTips = tipsArray.map(tip => ({
-            from: tip.from,
-            to: tip.to,
-            timestamp: Number(tip.timestamp) * 1000,
-            name: tip.name,
-            message: tip.message,
-            amount: tip.amount
-        }));
+        const formattedTips = tipsArray.map(tip => {
+          // Vérifiez si tip est un objet ou un tableau
+          const tipData = Array.isArray(tip) ? {
+            from: tip[0],
+            to: tip[1],
+            timestamp: tip[2],
+            name: tip[3],
+            message: tip[4],
+            amount: tip[5]
+          } : tip;
+
+          // Vérification du type et conversion
+          let timestamp = tipData.timestamp;
+          if (typeof timestamp === 'string' || typeof timestamp === 'number') {
+            timestamp = BigInt(timestamp);
+          }
+          
+          return {
+            from: tipData.from,
+            // Utilisez BigInt pour gérer les grands nombres
+            timestamp: Number(timestamp) * 1000,
+            name: tipData.name,
+            message: tipData.message,
+            selectedWallet: tipData.selectedWallet
+          };
+        });
 
         const filteredTips = formattedTips.filter(tip => 
-            tip.to && tip.to.toLowerCase() === address.toLowerCase()
+            tip.to.toLowerCase() === address.toLowerCase()
         );
-  
+
         const sortedTips = filteredTips.sort((a, b) => b.timestamp - a.timestamp);
-  
+
         setTips(sortedTips);
       }
     }, [data, address]);
