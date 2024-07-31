@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useReadContract } from 'wagmi';
+import { useReadContract, useAccount } from 'wagmi';
 import { contractAddress, contractABI } from "@/constants";
 
 import {
@@ -12,6 +12,7 @@ import {
 } from '../ui/card';
 
 const Tips = () => {
+    const { address } = useAccount();
     const { data, isError, isLoading, error } = useReadContract({
         address: contractAddress,
         abi: contractABI,
@@ -21,40 +22,28 @@ const Tips = () => {
     const [tips, setTips] = useState([]);
   
     useEffect(() => {
-      if (data) {
+      if (data && address) {
         // Vérifiez si data est un tableau
         const tipsArray = Array.isArray(data) ? data : [data];
         
-        const formattedTips = tipsArray.map(tip => {
-          // Vérifiez si tip est un objet ou un tableau
-          const tipData = Array.isArray(tip) ? {
-            from: tip[0],
-            timestamp: tip[1],
-            name: tip[2],
-            message: tip[3]
-          } : tip;
+        const formattedTips = tipsArray.map(tip => ({
+            from: tip.from,
+            to: tip.to,
+            timestamp: Number(tip.timestamp) * 1000,
+            name: tip.name,
+            message: tip.message,
+            amount: tip.amount
+        }));
 
-          // Vérification du type et conversion
-          let timestamp = tipData.timestamp;
-          if (typeof timestamp === 'string' || typeof timestamp === 'number') {
-            timestamp = BigInt(timestamp);
-          }
-          
-          return {
-            from: tipData.from,
-            // Utilisez BigInt pour gérer les grands nombres
-            timestamp: Number(timestamp) * 1000,
-            name: tipData.name,
-            message: tipData.message,
-            selectedWallet: tipData.selectedWallet
-          };
-        });
-
-        const sortedTips = formattedTips.sort((a, b) => b.timestamp - a.timestamp);
-
+        const filteredTips = formattedTips.filter(tip => 
+            tip.to && tip.to.toLowerCase() === address.toLowerCase()
+        );
+  
+        const sortedTips = filteredTips.sort((a, b) => b.timestamp - a.timestamp);
+  
         setTips(sortedTips);
       }
-    }, [data]);
+    }, [data, address]);
   
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading tips: {error?.message}</div>;
@@ -73,6 +62,7 @@ const Tips = () => {
                 <CardContent>
                     <p>{tip.message}</p>
                     <p>{tip.selectedWallet}</p>
+                    <p>Amount: {tip.amount.toString()} wei</p>
                 </CardContent>
                 <CardFooter>
                     <small className="text-sm font-medium leading-none">{new Date(tip.timestamp).toLocaleString()}</small>
