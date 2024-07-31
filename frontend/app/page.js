@@ -31,6 +31,12 @@ export default function Home() {
         functionName: 'getOwner',
     });
 
+    const { data: friendsList } = useReadContract({
+        address: contractAddress,
+        abi: contractABI,
+        functionName: 'getFriends'
+    });
+
     useEffect(() => {
         if (address && ownerAddress) {
             setIsOwner(address.toLowerCase() === ownerAddress.toLowerCase());
@@ -71,6 +77,14 @@ export default function Home() {
                             <TipForm selectedWallet={selectedWallet} />
                         </>
                     )}
+                    <div>
+                        <h2>Amis du propriétaire:</h2>
+                        <ul>
+                            {friendsList?.map((friend, index) => (
+                                <li key={index}>{friend}</li>
+                            ))}
+                        </ul>
+                    </div>
                 </>
             ) : (
                 <NotConnected />
