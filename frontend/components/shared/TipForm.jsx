@@ -32,7 +32,7 @@ const TipForm = ({ selectedWallet }) => {
                 address: contractAddress,
                 abi: contractABI,
                 functionName: 'tip',
-                args: [tipName, tipMessage, selectedWallet],
+                args: [tipName, tipMessage, selectedWallet, false],
                 value: parseEther(tipPrice),
                 overrides: {
                     from: address
@@ -50,7 +50,7 @@ const TipForm = ({ selectedWallet }) => {
     }, [isConfirmed]);
 
     return (
-        <div>
+        <>
             <p>Adresse Wallet : {selectedWallet}</p>
             <div className="mb-2">
                 <Label htmlFor="tipName">Nom</Label>
@@ -66,7 +66,7 @@ const TipForm = ({ selectedWallet }) => {
             </div>
             <Button className="mt-2" variant="outline" disabled={isPending} onClick={handleTip}>{isPending ? 'Envoie en cours...' : 'Envoyer le pourboir' }</Button>
             <Informations className="mt-10" hash={hash} isConfirming={isConfirming} isConfirmed={isConfirmed} error={error} />
-        </div>
+        </>
     )
 }
 

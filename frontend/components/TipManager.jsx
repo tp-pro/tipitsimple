@@ -1,69 +1,65 @@
-import { useState } from 'react';
-import { useWriteContract, useWalletClient } from 'wagmi';
-import { ethers } from 'ethers';
-import { contractAddress, contractABI } from '@/constants';
+import { useState } from "react";
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { contractAddress, contractABI } from "@/constants";
 
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 
-function TipManager({ onAddAccount }) {
-    const [name, setName] = useState('');
-    const [walletAddress, setWalletAddress] = useState('');
-    const { data: signer } = useWalletClient();
+import Informations from "./shared/Informations";
 
-    const { write: addFriend, isError, isLoading, error } = useWriteContract({
-        addressOrName: contractAddress,
-        contractInterface: contractABI,
-        functionName: 'addFriend',
-        signer,
-    });
+const TipManager = () => {
+    const [friendAddress, setFriendAddress] = useState('');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!walletAddress) {
-            console.error('Wallet address is required');
-            return;
+    const { address } = useAccount();
+
+    const { data: hash, isPending, error, writeContract } = useWriteContract();
+
+    const handleAddFriend = async () => {
+        if (friendAddress) {
+            writeContract({
+                address: contractAddress,
+                abi: contractABI,
+                functionName: 'addFriend',
+                args: [friendAddress],
+                overrides: {
+                    from: address
+                }
+            })
         }
-    
-        try {
-            const transactionResponse = await addFriend({ args: [walletAddress] });
-            const receipt = await transactionResponse.wait(); // Wait for the transaction to be mined
-            console.log('Transaction confirmed:', receipt);
-            // Here you might want to clear the form or handle the UI response
-        } catch (error) {
-            console.error('Failed to add friend:', error.message);
-        }
-    };
+    }
 
-    if (isLoading) return <div>Sending transaction...</div>;
-    if (isError) return <div>Error: {error?.message}</div>;
+    const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
 
     return (
-        <form onSubmit={handleSubmit}>
+        <div>
             <div className="mb-2">
-                <Label htmlFor="tipName">Nom</Label>
-                <Input
-                    type="text"
-                    placeholder="Nom"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
+                <Label htmlFor="friendAddress">Adresse de l'ami</Label>
+                <Input 
+                    type="text" 
+                    id="friendAddress" 
+                    placeholder="Ex: 0x1234..." 
+                    value={friendAddress} 
+                    onChange={(e) => setFriendAddress(e.target.value)}
                 />
             </div>
-            <div className="mb-2">
-                <Label htmlFor="tipName">Adresse Wallet</Label>
-                <Input
-                    type="text"
-                    placeholder="Adresse Wallet Metamask"
-                    value={walletAddress}
-                    onChange={(e) => setWalletAddress(e.target.value)}
-                    required
-                />
-            </div>
-            <Button className="mt-2" variant="outline" type="submit" disabled={isLoading}>Ajouter un compte</Button>
-        </form>
-    );
+            <Button 
+                className="mt-2" 
+                variant="outline" 
+                disabled={isPending} 
+                onClick={handleAddFriend}
+            >
+                {isPending ? 'Ajout en cours...' : 'Ajouter un ami'}
+            </Button>
+            <Informations 
+                className="mt-10" 
+                hash={hash} 
+                isConfirming={isConfirming} 
+                isConfirmed={isConfirmed} 
+                error={error} 
+            />
+        </div>
+    )
 }
 
 export default TipManager;

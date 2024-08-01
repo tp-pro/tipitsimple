@@ -53,9 +53,9 @@ const Tips = () => {
           };
         });
 
-        const filteredTips = formattedTips.filter(tip => 
-            tip.to.toLowerCase() === address.toLowerCase()
-        );
+        const filteredTips = formattedTips.filter(tip =>
+            tip.to && tip.to.toLowerCase() === address.toLowerCase()
+        );        
 
         const sortedTips = filteredTips.sort((a, b) => b.timestamp - a.timestamp);
 

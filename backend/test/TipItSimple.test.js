@@ -43,7 +43,7 @@ describe("TipItSimple test", function () {
             const message = "Great job!";
             const toAddress = otherAccount.address;
 
-            await expect(tipItSimple.connect(otherAccount).tip(name, message, toAddress,{ value: tipAmount }))
+            await expect(tipItSimple.connect(otherAccount).tip(name, message, toAddress, false, { value: tipAmount }))
                 .to.emit(tipItSimple, "NewTip")
                 .withArgs(otherAccount.address, toAddress, anyValue, name, message, anyValue);
             const tips = await tipItSimple.getTips();
@@ -60,7 +60,7 @@ describe("TipItSimple test", function () {
             const tipAmount = ethers.parseEther("0.00002");
             
             // Envoyer un pourboire
-            await tipItSimple.connect(owner).tip("Test", "Test message", owner.address, { value: tipAmount });
+            await tipItSimple.connect(owner).tip("Test", "Test message", owner.address, false, { value: tipAmount });
 
             // Obtenir le taux de commission
             const commissionRate = await tipItSimple.commissionRate();
@@ -123,7 +123,7 @@ describe("TipItSimple test", function () {
                 
                 const initialBalance = await ethers.provider.getBalance(otherAccount.address);
                 
-                await tipItSimple.connect(owner).tip("Test", "Test message", otherAccount.address, { value: tipAmount });
+                await tipItSimple.connect(owner).tip("Test", "Test message", otherAccount.address, false, { value: tipAmount });
                 
                 const finalBalance = await ethers.provider.getBalance(otherAccount.address);
                 const expectedCommission = (tipAmount * BigInt(rate)) / 100n;
@@ -140,7 +140,7 @@ describe("TipItSimple test", function () {
             const tipAmount = ethers.parseEther("0.1");
             const nullAddress = "0x0000000000000000000000000000000000000000";
     
-            await expect(tipItSimple.connect(owner).tip("Test", "Test message", nullAddress, { value: tipAmount })).to.be.revertedWith("Cannot send to zero address");
+            await expect(tipItSimple.connect(owner).tip("Test", "Test message", nullAddress, false, { value: tipAmount })).to.be.revertedWith("Cannot send to zero address");
         });
     });
 });

@@ -16,6 +16,19 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog"
+  
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
 
@@ -71,17 +84,28 @@ export default function Home() {
                             </CardFooter>
                         </Card>
                     ))}
-                    {selectedWallet && (
-                        <>
-                            <p>Adresse du portefeuille sélectionné: {selectedWallet}</p>
-                            <TipForm selectedWallet={selectedWallet} />
-                        </>
-                    )}
                     <div>
                         <h2>Amis du propriétaire:</h2>
                         <ul>
                             {friendsList?.map((friend, index) => (
-                                <li key={index}>{friend}</li>
+                                <li key={index} className="flex items-center justify-between mb-2">
+                                <span>{friend}</span>
+                                <AlertDialog>
+                                    <AlertDialogTrigger onClick={() => setSelectedWallet(friend)}>Open</AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Envoyer un pourboire à</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                <TipForm selectedWallet={selectedWallet} />
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction>Continue</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </li>
                             ))}
                         </ul>
                     </div>
