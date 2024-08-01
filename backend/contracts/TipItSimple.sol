@@ -239,13 +239,8 @@ contract TipItSimple {
      * @dev Fonction pour récupérer la liste des amis d'un utilisateur
      * @return Un tableau d'adresses représentant les amis de l'utilisateur
      */
-    function getFriends() public view returns (address[] memory) {
-        Friend[] storage myFriends = friends[msg.sender];
-        address[] memory friendAddresses = new address[](myFriends.length);
-        for (uint256 i = 0; i < myFriends.length; i++) {
-            friendAddresses[i] = myFriends[i].addr;
-        }
-        return friendAddresses;
+    function getFriends() public view returns (Friend[] memory) {
+        return friends[msg.sender];
     }
 
     /**

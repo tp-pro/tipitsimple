@@ -177,9 +177,21 @@ export const contractABI=[
       "name": "getFriends",
       "outputs": [
         {
-          "internalType": "address[]",
+          "components": [
+            {
+              "internalType": "address",
+              "name": "addr",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct TipItSimple.Friend[]",
           "name": "",
-          "type": "address[]"
+          "type": "tuple[]"
         }
       ],
       "stateMutability": "view",

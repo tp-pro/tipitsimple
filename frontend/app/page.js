@@ -33,8 +33,8 @@ import { Button } from '@/components/ui/button';
 export default function Home() {
 
     const { isConnected, address } = useAccount();
-    const [accounts, setAccounts] = useState([]);
-    const [selectedWallet, setSelectedWallet] = useState(null);
+    // const [accounts, setAccounts] = useState([]);
+    const [selectedWallet, setSelectedWallet] = useState({ addr: null, name: null });
     const [isOwner, setIsOwner] = useState(false);
 
     // Lire l'adresse du propriétaire du contrat
@@ -54,55 +54,38 @@ export default function Home() {
         if (address && ownerAddress) {
             setIsOwner(address.toLowerCase() === ownerAddress.toLowerCase());
         }
-        if (friendsList && Array.isArray(friendsList)) {
-            setAccounts(friendsList.map(friend => ({
-                name: friend.name,
-                walletAddress: friend.address
-            })));
-        }
-    }, [address, ownerAddress, friendsList]);
+    }, [address, ownerAddress]);
 
-    const addAccount = (account) => {
-        setAccounts(prevAccounts => ({
-            ...prevAccounts,
-            [address]: [...(prevAccounts[address] || []), account]
-        }));
-    };
+    // console.log(friendsList);
+
+    // const addAccount = (account) => {
+    //     setAccounts(prevAccounts => ({
+    //         ...prevAccounts,
+    //         [address]: [...(prevAccounts[address] || []), account]
+    //     }));
+    // };
    
-    const currentUserAccounts = accounts[address] || [];
+    // const currentUserAccounts = accounts[address] || [];
 
     return (
         <div>
             { isConnected ? (
                 <>
                     <TipModule />
-                    {isOwner && <TipManager onAddAccount={addAccount} />}
-                    {currentUserAccounts.map((account, index) => (
-                        <Card key={index} className="my-2">
-                            <CardHeader>
-                                <CardTitle>{account.name}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p>{account.walletAddress}</p>
-                            </CardContent>
-                            <CardFooter>
-                                <button onClick={() => setSelectedWallet(account.walletAddress)}>Envoyer un pourboire</button>
-                            </CardFooter>
-                        </Card>
-                    ))}
+                    {isOwner && <TipManager />}
                     <div>
                         <h2>Amis du propriétaire:</h2>
                         <ul>
                             {friendsList?.map((friend, index) => (
                                 <li key={index} className="flex items-center justify-between mb-2">
-                                <span>{friend}{friend.name}</span>
+                                <span>{friend.name} ({friend.addr})</span>
                                 <AlertDialog>
-                                    <AlertDialogTrigger onClick={() => setSelectedWallet(friend)}>Open</AlertDialogTrigger>
+                                    <AlertDialogTrigger onClick={() => setSelectedWallet({ addr: friend.addr, name: friend.name })}>Open</AlertDialogTrigger>
                                     <AlertDialogContent>
                                         <AlertDialogHeader>
-                                            <AlertDialogTitle>Envoyer un pourboire à</AlertDialogTitle>
+                                            <AlertDialogTitle>Envoyer un pourboire à {selectedWallet.name}</AlertDialogTitle>
                                             <AlertDialogDescription>
-                                                <TipForm selectedWallet={selectedWallet} />
+                                                <TipForm selectedWallet={selectedWallet.addr} />
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
