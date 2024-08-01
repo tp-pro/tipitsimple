@@ -143,4 +143,31 @@ describe("TipItSimple test", function () {
             await expect(tipItSimple.connect(owner).tip("Test", "Test message", nullAddress, false, { value: tipAmount })).to.be.revertedWith("Cannot send to zero address");
         });
     });
+
+    describe("addFriend function", function () {
+        it("Should allow adding a new friend with a name", async function () {
+            const { tipItSimple, owner, otherAccount } = await loadFixture(deployFixture);
+            const friendName = "John Doe";
+            await expect(tipItSimple.connect(owner).addFriend(otherAccount.address, friendName))
+                .to.emit(tipItSimple, "FriendAdded")
+                .withArgs(owner.address, otherAccount.address, friendName);
+            
+            const isNowFriend = await tipItSimple.checkIsFriend(owner.address, otherAccount.address);
+            expect(isNowFriend).to.be.true;
+        });
+
+        it("Should fail to add oneself as a friend", async function () {
+            const { tipItSimple, owner } = await loadFixture(deployFixture);
+            await expect(tipItSimple.connect(owner).addFriend(owner.address, "Myself"))
+                .to.be.revertedWith("Cannot add yourself as a friend");
+        });
+
+        it("Should fail to add the same friend twice", async function () {
+            const { tipItSimple, owner, otherAccount } = await loadFixture(deployFixture);
+            const friendName = "John Doe";
+            await tipItSimple.connect(owner).addFriend(otherAccount.address, friendName);
+            await expect(tipItSimple.connect(owner).addFriend(otherAccount.address, friendName))
+                .to.be.revertedWith("Already a friend");
+        });
+    });
 });

@@ -6,7 +6,7 @@ pragma solidity ^0.8.26;
 
 contract TipItSimple {
     //mapping pour stocker les amis de chaque utilisateur
-    mapping(address => address[]) private friends;
+    mapping(address => Friend[]) private friends;
 
     //mapping pour vérifier rapidement si une adresse est un ami
     mapping(address => mapping(address => bool)) private isFriend;
@@ -31,6 +31,19 @@ contract TipItSimple {
 
     //évènement pour émettre le changement du taux commission
     event CommissionRateChanged(uint256 newRate);
+
+    //évènement pour émettre l'ajout d'un nouvel ami
+    event FriendAdded(
+        address indexed owner,
+        address indexed friendAddress,
+        string friendName
+    );
+
+    //enregistrement des amis dans le smart contract
+    struct Friend {
+        address addr;
+        string name;
+    }
 
     //enregistrement des transactions dans le smart contract
     struct Transaction {
@@ -113,12 +126,16 @@ contract TipItSimple {
         address payable recipient;
         if (_isIndex) {
             require(_to < friends[msg.sender].length, "Invalid friend index");
-            recipient = payable(friends[msg.sender][_to]);
+            recipient = payable(friends[msg.sender][_to].addr);
         } else {
             recipient = payable(address(uint160(_to)));
         }
 
         require(recipient != address(0), "Cannot send to zero address");
+        require(
+            recipient != address(this),
+            "Cannot tip to the contract itself"
+        );
 
         uint256 commission = (msg.value * commissionRate) / 100;
         uint256 amountToSend = msg.value - commission;
@@ -178,12 +195,20 @@ contract TipItSimple {
      * @dev Fonction pour ajouter un ami, restreinte au propriétaire du contrat
      * @param _friend Adresse de l'ami à ajouter
      */
-    function addFriend(address _friend) public onlyOwner {
+    function addFriend(address _friend, string memory _name) public onlyOwner {
         require(_friend != msg.sender, "Cannot add yourself as a friend");
+        require(
+            _friend != address(this),
+            "Cannot add the contract as a friend"
+        );
         require(!isFriend[owner][_friend], "Already a friend");
 
-        friends[owner].push(_friend);
+        Friend memory newFriend = Friend({addr: _friend, name: _name});
+
+        friends[owner].push(newFriend);
         isFriend[owner][_friend] = true;
+
+        emit FriendAdded(msg.sender, _friend, _name);
     }
 
     /**
@@ -191,10 +216,14 @@ contract TipItSimple {
      * @param _friend Adresse de l'ami à supprimer
      */
     function removeFriend(address _friend) public {
+        require(
+            _friend != address(this),
+            "Cannot remove the contract as a friend"
+        );
         require(isFriend[msg.sender][_friend], "Not a friend");
 
         for (uint256 i = 0; i < friends[msg.sender].length; i++) {
-            if (friends[msg.sender][i] == _friend) {
+            if (friends[msg.sender][i].addr == _friend) {
                 friends[msg.sender][i] = friends[msg.sender][
                     friends[msg.sender].length - 1
                 ];
@@ -211,6 +240,23 @@ contract TipItSimple {
      * @return Un tableau d'adresses représentant les amis de l'utilisateur
      */
     function getFriends() public view returns (address[] memory) {
-        return friends[msg.sender];
+        Friend[] storage myFriends = friends[msg.sender];
+        address[] memory friendAddresses = new address[](myFriends.length);
+        for (uint256 i = 0; i < myFriends.length; i++) {
+            friendAddresses[i] = myFriends[i].addr;
+        }
+        return friendAddresses;
+    }
+
+    /**
+     * @dev Fonction pour définir si une adresse est un ami
+     * @return Un tableau d'adresses représentant les amis de l'utilisateur
+     */
+    function checkIsFriend(address _owner, address friendAddress)
+        public
+        view
+        returns (bool)
+    {
+        return isFriend[_owner][friendAddress];
     }
 }
