@@ -33,7 +33,7 @@ const TipManager = () => {
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
 
     return (
-        <div>
+        <div className="mb-20">
             <div className="mb-2">
                 <Label htmlFor="friendName">Nom de l'ami</Label>
                 <Input 

@@ -1,21 +1,14 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import TipModule from '@/components/shared/TipModule';
-import NotConnected from '@/components/shared/NotConnected';
-import TipManager from '@/components/TipManager';
 import { useAccount, useReadContract } from "wagmi";
-import TipForm from '@/components/shared/TipForm';
 import { contractAddress, contractABI } from "@/constants";
 
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import TipModule from '@/components/shared/TipModule';
+import NotConnected from '@/components/shared/NotConnected';
+import TipForm from '@/components/shared/TipForm';
+import TipManager from '@/components/TipManager';
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -27,17 +20,14 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-  
-import { Button } from '@/components/ui/button';
 
 export default function Home() {
 
     const { isConnected, address } = useAccount();
-    // const [accounts, setAccounts] = useState([]);
+    
     const [selectedWallet, setSelectedWallet] = useState({ addr: null, name: null });
     const [isOwner, setIsOwner] = useState(false);
 
-    // Lire l'adresse du propriétaire du contrat
     const { data: ownerAddress } = useReadContract({
         address: contractAddress,
         abi: contractABI,
@@ -56,34 +46,23 @@ export default function Home() {
         }
     }, [address, ownerAddress]);
 
-    // console.log(friendsList);
-
-    // const addAccount = (account) => {
-    //     setAccounts(prevAccounts => ({
-    //         ...prevAccounts,
-    //         [address]: [...(prevAccounts[address] || []), account]
-    //     }));
-    // };
-   
-    // const currentUserAccounts = accounts[address] || [];
-
     return (
         <div>
             { isConnected ? (
                 <>
-                    <TipModule />
-                    {isOwner && <TipManager />}
-                    <div>
-                        <h2>Amis du propriétaire:</h2>
-                        <ul>
+                    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 lg:pt-32 px-4 pt-20">
+                        {isOwner && <TipManager />}
+                        <h2 className="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100 mb-7">🤝  Amis du propriétaire</h2>
+                        <ul className="grid lg:grid-cols-3 grid-cols-1 gap-x-8">
                             {friendsList?.map((friend, index) => (
-                                <li key={index} className="flex items-center justify-between mb-2">
-                                <span>{friend.name} ({friend.addr})</span>
+                            <li key={index}>
+                                <p>{friend.name}</p>
+                                <p className="text-xs text-zinc-500 dark:text-zinc-400">{friend.addr}</p>
                                 <AlertDialog>
-                                    <AlertDialogTrigger onClick={() => setSelectedWallet({ addr: friend.addr, name: friend.name })}>Open</AlertDialogTrigger>
+                                    <AlertDialogTrigger onClick={() => setSelectedWallet({ addr: friend.addr, name: friend.name })} className="mt-3">Envoyer un pourboire</AlertDialogTrigger>
                                     <AlertDialogContent>
                                         <AlertDialogHeader>
-                                            <AlertDialogTitle>Envoyer un pourboire à {selectedWallet.name}</AlertDialogTitle>
+                                            <AlertDialogTitle>🚀 Envoyer un pourboire à {selectedWallet.name}</AlertDialogTitle>
                                             <AlertDialogDescription>
                                                 <TipForm selectedWallet={selectedWallet.addr} />
                                             </AlertDialogDescription>
@@ -98,6 +77,7 @@ export default function Home() {
                             ))}
                         </ul>
                     </div>
+                    <TipModule />
                 </>
             ) : (
                 <NotConnected />

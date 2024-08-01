@@ -20,10 +20,11 @@ const TipsList = ({ isSent }) => {
     return (
         <ul>
             {filteredTips.map((tip, index) => (
-                <li key={index}>
-                    {isSent ? `Envoyé à ${tip.to}` : `Reçu de ${tip.from}`}: 
-                    {tip.amount} ETH - 
-                    Message: {tip.message}
+                <li key={index} className="md:border-b md:border-zinc-100 md:pb-6 md:pt-6 md:dark:border-zinc-700/40">
+                    <p>{isSent ? `Envoyé à ${tip.name}` : `Reçu de ${tip.name}`}</p> 
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">{isSent ? `Envoyé à ${tip.to}` : `Reçu de ${tip.from}`}</p> 
+                    <p>{tip.amount} ETH</p>
+                    <p>Message: {tip.message}</p>
                 </li>
             ))}
         </ul>
