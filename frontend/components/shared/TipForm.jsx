@@ -57,10 +57,10 @@ const TipForm = ({ selectedWallet }) => {
     return (
         <>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-5">{selectedWallet}</p>
-            <div className="mb-2">
+            {/* <div className="mb-2">
                 <Label htmlFor="tipName">Nom</Label>
                 <Input type="text" id="tipName" placeholder="Ex: John Doe" value={tipName} onChange={(e) => setTipName(e.target.value)}></Input>
-            </div>
+            </div> */}
             <div className="my-2">
                 <Label htmlFor="tipMessage">Message</Label>
                 <Textarea id="tipMessage" placeholder="Ex: Merci pour le coup de pouce" value={tipMessage} onChange={(e) => setTipMessage(e.target.value)} />
