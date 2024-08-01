@@ -26,18 +26,23 @@ const TipForm = ({ selectedWallet }) => {
         setTipPrice('');
     };
 
-    const handleTip = async() => {
+    const handleTip = async () => {
         if (selectedWallet) { 
-            writeContract({
-                address: contractAddress,
-                abi: contractABI,
-                functionName: 'tip',
-                args: [tipName, tipMessage, selectedWallet, false],
-                value: parseEther(tipPrice),
-                overrides: {
-                    from: address
-                }
-            })
+            try {
+                await writeContract({
+                    address: contractAddress,
+                    abi: contractABI,
+                    functionName: 'tip',
+                    args: [tipName, tipMessage, selectedWallet, false],
+                    value: parseEther(tipPrice),
+                    overrides: {
+                       from: address
+                    }
+                });
+            } catch (error) {
+                console.error("Failed to send tip:", error);
+                alert(`Error sending tip: ${error.message}`);
+            }
         }
     }
 

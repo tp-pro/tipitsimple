@@ -10,18 +10,19 @@ import Informations from "./shared/Informations";
 
 const TipManager = () => {
     const [friendAddress, setFriendAddress] = useState('');
+    const [friendName, setFriendName] = useState('');
 
     const { address } = useAccount();
 
     const { data: hash, isPending, error, writeContract } = useWriteContract();
 
     const handleAddFriend = async () => {
-        if (friendAddress) {
+        if (friendAddress && friendName) {
             writeContract({
                 address: contractAddress,
                 abi: contractABI,
                 functionName: 'addFriend',
-                args: [friendAddress],
+                args: [friendAddress, friendName],
                 overrides: {
                     from: address
                 }
@@ -33,6 +34,16 @@ const TipManager = () => {
 
     return (
         <div>
+            <div className="mb-2">
+                <Label htmlFor="friendName">Nom de l'ami</Label>
+                <Input 
+                    type="text" 
+                    id="friendName" 
+                    placeholder="Entrez le nom de l'ami" 
+                    value={friendName} 
+                    onChange={(e) => setFriendName(e.target.value)}
+                />
+            </div>
             <div className="mb-2">
                 <Label htmlFor="friendAddress">Adresse de l'ami</Label>
                 <Input 

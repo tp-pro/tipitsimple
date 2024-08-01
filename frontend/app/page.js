@@ -54,7 +54,13 @@ export default function Home() {
         if (address && ownerAddress) {
             setIsOwner(address.toLowerCase() === ownerAddress.toLowerCase());
         }
-    }, [address, ownerAddress]);
+        if (friendsList && Array.isArray(friendsList)) {
+            setAccounts(friendsList.map(friend => ({
+                name: friend.name,
+                walletAddress: friend.address
+            })));
+        }
+    }, [address, ownerAddress, friendsList]);
 
     const addAccount = (account) => {
         setAccounts(prevAccounts => ({
@@ -89,7 +95,7 @@ export default function Home() {
                         <ul>
                             {friendsList?.map((friend, index) => (
                                 <li key={index} className="flex items-center justify-between mb-2">
-                                <span>{friend}</span>
+                                <span>{friend}{friend.name}</span>
                                 <AlertDialog>
                                     <AlertDialogTrigger onClick={() => setSelectedWallet(friend)}>Open</AlertDialogTrigger>
                                     <AlertDialogContent>

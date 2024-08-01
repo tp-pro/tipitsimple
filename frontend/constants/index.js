@@ -24,6 +24,31 @@ export const contractABI=[
         {
           "indexed": true,
           "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "friendAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "friendName",
+          "type": "string"
+        }
+      ],
+      "name": "FriendAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
           "name": "from",
           "type": "address"
         },
@@ -98,11 +123,40 @@ export const contractABI=[
           "internalType": "address",
           "name": "_friend",
           "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
         }
       ],
       "name": "addFriend",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "friendAddress",
+          "type": "address"
+        }
+      ],
+      "name": "checkIsFriend",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -341,4 +395,4 @@ export const contractABI=[
       "stateMutability": "nonpayable",
       "type": "function"
     }
-]
+  ]
