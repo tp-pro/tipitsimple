@@ -46,6 +46,8 @@ export default function Home() {
         }
     }, [address, ownerAddress]);
 
+    const filteredFriendsList = friendsList?.filter(friend => friend.addr.toLowerCase() !== address?.toLowerCase()) || [];
+
     return (
         <div>
             { isConnected ? (
@@ -54,7 +56,7 @@ export default function Home() {
                         {isOwner && <TipManager />}
                         <h2 className="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100 mb-7">🤝  Amis du propriétaire</h2>
                         <ul className="grid lg:grid-cols-3 grid-cols-1 gap-x-8">
-                            {friendsList?.map((friend, index) => (
+                            {filteredFriendsList?.map((friend, index) => (
                             <li key={index}>
                                 <p>{friend.name}</p>
                                 <p className="text-xs text-zinc-500 dark:text-zinc-400">{friend.addr}</p>
