@@ -46,6 +46,10 @@ export default function Home() {
         }
     }, [address, ownerAddress]);
 
+    useEffect(() => {
+        console.log('friendsList:', friendsList);
+    }, [friendsList]);
+
     const filteredFriendsList = friendsList?.filter(friend => friend.addr.toLowerCase() !== address?.toLowerCase()) || [];
 
     return (
@@ -62,7 +66,7 @@ export default function Home() {
                                 <p className="text-xs text-zinc-500 dark:text-zinc-400">{friend.addr}</p>
                                 <AlertDialog>
                                     <AlertDialogTrigger onClick={() => setSelectedWallet({ addr: friend.addr, name: friend.name })} className="mt-3">Envoyer un pourboire</AlertDialogTrigger>
-                                    <AlertDialogContent>
+                                    <AlertDialogContent className="w-auto sm:w-auto max-w-100">
                                         <AlertDialogHeader>
                                             <AlertDialogTitle>🚀 Envoyer un pourboire à {selectedWallet.name}</AlertDialogTitle>
                                             <AlertDialogDescription>
