@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { contractAddress, contractABI } from "@/constants";
+import { tipManagerAddress, tipManagerABI } from "@/constants";
 
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -30,8 +30,8 @@ const TipForm = ({ selectedWallet }) => {
         if (selectedWallet) { 
             try {
                 await writeContract({
-                    address: contractAddress,
-                    abi: contractABI,
+                    address: tipManagerAddress,
+                    abi: tipManagerABI,
                     functionName: 'tip',
                     args: [tipName, tipMessage, selectedWallet, false],
                     value: parseEther(tipPrice),

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAccount, useReadContract } from "wagmi";
-import { contractAddress, contractABI } from "@/constants";
+import { tipItSimpleAddress, tipItSimpleABI, friendManagerAddress, friendManagerABI } from "@/constants";
 
 import TipModule from '@/components/shared/TipModule';
 import NotConnected from '@/components/shared/NotConnected';
@@ -29,14 +29,14 @@ export default function Home() {
     const [isOwner, setIsOwner] = useState(false);
 
     const { data: ownerAddress } = useReadContract({
-        address: contractAddress,
-        abi: contractABI,
+        address: tipItSimpleAddress,
+        abi: tipItSimpleABI,
         functionName: 'getOwner',
     });
 
     const { data: friendsList } = useReadContract({
-        address: contractAddress,
-        abi: contractABI,
+        address: friendManagerAddress,
+        abi: friendManagerABI,
         functionName: 'getFriends'
     });
 

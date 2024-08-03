@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { contractAddress, contractABI } from "@/constants";
+import { friendManagerAddress, friendManagerABI } from "@/constants";
 
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -19,8 +19,8 @@ const TipManager = () => {
     const handleAddFriend = async () => {
         if (friendAddress && friendName) {
             writeContract({
-                address: contractAddress,
-                abi: contractABI,
+                address: friendManagerAddress,
+                abi: friendManagerABI,
                 functionName: 'addFriend',
                 args: [friendAddress, friendName],
                 overrides: {

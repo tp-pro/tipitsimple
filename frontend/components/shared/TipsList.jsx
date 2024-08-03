@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useReadContract, useAccount } from "wagmi";
-import { contractAddress, contractABI } from "@/constants";
+import { tipManagerAddress, tipManagerABI, friendManagerAddress, friendManagerABI } from "@/constants";
 
 import { ethers } from 'ethers';
 
@@ -12,14 +12,14 @@ const TipsList = ({ isSent }) => {
     const [friendsMap, setFriendsMap] = useState({});
 
     const { data: tips, isLoading: tipsLoading, isError: tipsError } = useReadContract({
-        address: contractAddress,
-        abi: contractABI,
+        address: tipManagerAddress,
+        abi: tipManagerABI,
         functionName: 'getTips',
     });
 
     const { data: friends, isLoading: friendsLoading, isError: friendsError } = useReadContract({
-        address: contractAddress,
-        abi: contractABI,
+        address: friendManagerAddress,
+        abi: friendManagerABI,
         functionName: 'getFriends',
     });
 

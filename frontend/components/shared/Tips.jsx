@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useReadContract, useAccount } from 'wagmi';
-import { contractAddress, contractABI } from "@/constants";
+import { tipManagerAddress, tipManagerABI } from "@/constants";
 
 import {
     Card,
@@ -14,8 +14,8 @@ import {
 const Tips = () => {
     const { address } = useAccount();
     const { data, isError, isLoading, error } = useReadContract({
-        address: contractAddress,
-        abi: contractABI,
+        address: tipManagerAddress,
+        abi: tipManagerABI,
         functionName: 'getTips'
     });
   
