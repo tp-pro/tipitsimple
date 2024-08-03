@@ -9,7 +9,7 @@ module.exports = {
     networks: {
         localhost: {
             url: process.env.LOCAL_HARDHAT,
-            accounts: [process.env.LOCAL_HARDHAT_PRIVATE_KEY]
+            chainId: 31337
         },
         amoyTestnet: {
             url: process.env.TESTNET_AMOY_URL,
