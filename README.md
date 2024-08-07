@@ -69,6 +69,12 @@ Launch the front
 
 You'll need an ID for RainbowKit connect https://cloud.walletconnect.com/
 
+### env variables
+
+Create a .env.local and add :
+
+NEXT_PUBLIC_RAINBOWKIT_PROJECT_ID="ID from cloud walleconnect"
+
 ## Ready to use the DApp
 
 1. First you need to add local wallet address to metamask
