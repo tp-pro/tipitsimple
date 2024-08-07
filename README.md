@@ -75,6 +75,8 @@ Create a .env.local and add :
 
 NEXT_PUBLIC_RAINBOWKIT_PROJECT_ID="ID from cloud walleconnect"
 
+Doc Next JS https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables
+
 ## Ready to use the DApp
 
 1. First you need to add local wallet address to metamask
