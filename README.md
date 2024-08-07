@@ -8,6 +8,8 @@ Launch local blockchain
 
 `npx hardhat node`
 
+note the local wallets to add to Metamask for using the DApp in local
+
 ### metamask
 
 add hardhat local network
@@ -33,21 +35,27 @@ CTRL+D
 
 python3 -m pip install slither-analyzer
 
-slither .
+`slither .`
 
-slither . - -checklist
+or
 
-slither . - -checklist - -show-ignored-findings
+`slither . --checklist` my favorite
 
-note the local wallets to add to Metamask for using the DApp in local
+or
+
+`slither . --checklist - -show-ignored-findings`
+
+### hardhat console
 
 You launch hardhat console
 
 `npx hardhat console --network localhost`
 
+### deploy
+
 Need to deploy ?
 
-`npx hardhat ignition deploy ./ignition/modules/Lock.js --network localhost`
+`npx hardhat ignition deploy ./ignition/modules/TISdeploy.js --network localhost`
 
 ## frontend
 
