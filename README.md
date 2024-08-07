@@ -1,36 +1,72 @@
 ## backend
 
-nvm use stable
-yarn init
-yarn add hardhat --dev
-yarn hardhat init
+Go to /backend
 
-## compilation du contrat
+`yarn install`
 
-npx hardhat compile
+Launch local blockchain
 
-## sécurité du contrat avec Slither
+`npx hardhat node`
+
+### metamask
+
+add hardhat local network
+
+- Network Name: `Hardhat`— This is up to you and defines how the network will show up in your network dropdown.
+- New RPC URL: [`http://127.0.0.1:8545/`]
+- Chain ID: `31337` — This is the default chain identifier that is implemented by Hardhat.
+- Currency Symbol: `HardhatETH` — This is up to you and defines the symbol for the local network currency (ie. ETH).
+
+You can pass tests
+
+`npx hardhat test`
+
+And coverage
+
+`npx hardhat coverage`
+
+### security with Slither
 
 python3 - -version
+
 CTRL+D
+
 python3 -m pip install slither-analyzer
 
 slither .
+
 slither . - -checklist
+
 slither . - -checklist - -show-ignored-findings
 
-## test
+note the local wallets to add to Metamask for using the DApp in local
 
-/backend/test/
-renommer Lock.js en TipItSimple.test.js
-nettoyer
-describe("TipItSimple test", function ()
-deployOneYearLockFixture => deployFixture
-npx hardhat test
-yarn hardhat coverage
+You launch hardhat console
 
-## déploiement
+`npx hardhat console --network localhost`
 
-/backend/ignition/modules
-npx hardhat ignition deploy ./ignition/modules/TISdeploy.js --network localhost
-0x5FbDB2315678afecb367f032d93F642f64180aa3 = Contract address: 0x5fbdb2315678afecb367f032d93f642f64180aa3 retourné par la console du réseau local (npx hardhat node)
+Need to deploy ?
+
+`npx hardhat ignition deploy ./ignition/modules/Lock.js --network localhost`
+
+## frontend
+
+Go to /frontend
+
+`npm install`
+
+Launch the front
+
+`npm run dev`
+
+## How to use the DApp
+
+First you need to add local wallet address to metamask
+
+Then connect to first account of the list, now you should have the Form to add accounts
+
+Add an account with the second address for exemple, with a name like John
+
+Then disconnect for connect with another wallet address, the third of the list for exemple
+
+Now you should have the profil of John, you can send him a tip
