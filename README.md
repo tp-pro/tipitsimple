@@ -1,4 +1,6 @@
-## backend
+# TipitSimple DApp
+
+## Backend
 
 Go to /backend
 
@@ -10,7 +12,9 @@ Launch local blockchain
 
 note the local wallets to add to Metamask for using the DApp in local
 
-### metamask
+### Metamask
+
+install Metamask web3 wallet https://metamask.io/download/
 
 add hardhat local network
 
@@ -18,6 +22,10 @@ add hardhat local network
 - New RPC URL: [`http://127.0.0.1:8545/`]
 - Chain ID: `31337` — This is the default chain identifier that is implemented by Hardhat.
 - Currency Symbol: `HardhatETH` — This is up to you and defines the symbol for the local network currency (ie. ETH).
+
+Then add local wallets you can use with local hardhat blockchain
+
+### Test the smart contract
 
 You can pass tests
 
@@ -27,37 +35,27 @@ And coverage
 
 `npx hardhat coverage`
 
-### security with Slither
+### Security with Slither
 
-python3 - -version
-
-CTRL+D
+more infos https://github.com/crytic/slither
 
 python3 -m pip install slither-analyzer
 
-`slither .`
+`slither . --checklist`
 
-or
-
-`slither . --checklist` my favorite
-
-or
-
-`slither . --checklist - -show-ignored-findings`
-
-### hardhat console
+### Hardhat console
 
 You launch hardhat console
 
 `npx hardhat console --network localhost`
 
-### deploy
+### Deploy
 
 Need to deploy ?
 
 `npx hardhat ignition deploy ./ignition/modules/TISdeploy.js --network localhost`
 
-## frontend
+## Frontend
 
 Go to /frontend
 
@@ -67,14 +65,14 @@ Launch the front
 
 `npm run dev`
 
-## How to use the DApp
+### Rainbowkit ID
 
-First you need to add local wallet address to metamask
+You'll need an ID for RainbowKit connect https://cloud.walletconnect.com/
 
-Then connect to first account of the list, now you should have the Form to add accounts
+## Ready to use the DApp
 
-Add an account with the second address for exemple, with a name like John
-
-Then disconnect for connect with another wallet address, the third of the list for exemple
-
-Now you should have the profil of John, you can send him a tip
+1. First you need to add local wallet address to metamask
+2. Then connect to first account of the list, now you should have the Form to add accounts
+3. Add an account with the second address for exemple, with a name like John
+4. Then disconnect for connect with another wallet address, the third of the list for exemple
+5. Now you should have the profil of John, you can send him a tip
