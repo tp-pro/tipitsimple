@@ -79,7 +79,7 @@ Doc Next JS https://nextjs.org/docs/pages/building-your-application/configuring/
 
 ## Ready to use the DApp
 
-1. First you need to add local wallet address to metamask
+1. First you need to add local wallet address to metamask (exemple for Account #0 import new account with Private Key)
 2. Then connect to first account of the list, now you should have the Form to add accounts
 3. Add an account with the second address for exemple, with a name like John
 4. Then disconnect for connect with another wallet address, the third of the list for exemple
